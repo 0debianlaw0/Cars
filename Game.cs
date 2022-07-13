@@ -6,35 +6,35 @@ namespace Cars
     {
         public void Launch()
         {
-            double speed = 100.0;
-            double acceleration = 0.5;
-            int playfieldWidth = 5;
-            int livesCount = 5;
-            bool keepPlaying = true;
+            double speed = 100.0; //Velocidad inicial
+            double acceleration = 0.5; //Acceleración
+            int playfieldWidth = 5; //Ancho del campo de juego
+            int livesCount = 5; //Vidas Iniciales
+            bool keepPlaying = true; //Rompe bucle de juego
             Console.Clear();
-            Console.BufferHeight = Console.WindowHeight = 20;
-            Console.BufferWidth = Console.WindowWidth = 30;
-            Object objectCar = new Object();
-            objectCar.x = 2;
-            objectCar.y = Console.WindowHeight - 1;
-            objectCar.c = '@';
-            objectCar.color = ConsoleColor.Yellow;
+            Console.BufferHeight = Console.WindowHeight = 20; //Altura en 20
+            Console.BufferWidth = Console.WindowWidth = 30; //Ancho en 30
+            Object objectCar = new Object(); //Llamamos a la clase Object
+            objectCar.x = 2; //Posicion inical x
+            objectCar.y = Console.WindowHeight - 1; //Posicion inicial y
+            objectCar.c = '@'; //char que representa el coche
+            objectCar.color = ConsoleColor.Yellow; //Color del coche
             Random randomGenerator = new Random();
             List<Object> objects = new List<Object>();
-            while (keepPlaying)
+            while (keepPlaying) //Mientras el bucle no se rompa
             {
-                speed += acceleration;
-                if (speed > 400)
+                speed += acceleration; //sumar acceleración
+                if (speed > 400) //Velocidad maxima
                 {
                     speed = 400;
                 }
 
-                bool hitted = false;
+                bool hitted = false;  //No has chocado
                 {
-                    int chance = randomGenerator.Next(0, 100);
+                    int chance = randomGenerator.Next(0, 100);//Genera de manera aleatoria los obstaculos y bonuses en la pantalla
                     if (chance < 10)
                     {
-                        Object newObject = new Object();
+                        Object newObject = new Object(); //+Vida
                         newObject.color = ConsoleColor.Green;
                         newObject.c = '-';
                         newObject.x = randomGenerator.Next(0, playfieldWidth);
@@ -43,7 +43,7 @@ namespace Cars
                     }
                     else if (chance < 20)
                     {
-                        Object newObject = new Object();
+                        Object newObject = new Object(); //-Velocidad
                         newObject.color = ConsoleColor.Cyan;
                         newObject.c = '*';
                         newObject.x = randomGenerator.Next(0, playfieldWidth);
@@ -52,7 +52,7 @@ namespace Cars
                     }
                     else
                     {
-                        Object newCar = new Object();
+                        Object newCar = new Object(); //Obstaculo
                         newCar.color = ConsoleColor.Gray;
                         newCar.x = randomGenerator.Next(0, playfieldWidth);
                         newCar.y = 0;
@@ -61,7 +61,7 @@ namespace Cars
                     }
                 }
 
-                while (Console.KeyAvailable)
+                while (Console.KeyAvailable) //Movimiento del coche y tecla de salir
                 {
                     ConsoleKeyInfo pressedKey = Console.ReadKey(true);
                     //while (Console.KeyAvailable) Console.ReadKey(true);
@@ -87,7 +87,7 @@ namespace Cars
                     }
                 }
                 List<Object> newList = new List<Object>();
-                for (int i = 0; i < objects.Count; i++)
+                for (int i = 0; i < objects.Count; i++) //Comprueba contra que has colisionado
                 {
                     Object oldCar = objects[i];
                     Object newObject = new Object();
@@ -112,7 +112,7 @@ namespace Cars
                         {
                             speed = 400;
                         }
-                        if (livesCount <= 0)
+                        if (livesCount <= 0) //Funcion de muerte
                         {
                             PrtStringOnPosition.PrintStringOnPosition(8, 10, "¡¡¡FIN DE PARTIDA!!!", ConsoleColor.Red);
                             PrtStringOnPosition.PrintStringOnPosition(8, 12, "Presiona [enter] para salir", ConsoleColor.Red);
@@ -129,7 +129,7 @@ namespace Cars
                 }
                 objects = newList;
                 Console.Clear();
-                if (hitted)
+                if (hitted) //Determina que ocurre cuando te chocas y sigues manteniendo vidas
                 {
                     objects.Clear();
 
@@ -144,11 +144,11 @@ namespace Cars
                     PrtOnPosition.PrintOnPosition(car.x, car.y, car.c, car.color);
                 }
 
-                // Draw info
+                // Dibuja los datos en pantalla
                 PrtStringOnPosition.PrintStringOnPosition(8, 4, "Vidas: " + livesCount, ConsoleColor.White);
                 PrtStringOnPosition.PrintStringOnPosition(8, 5, "Velocidad: " + speed, ConsoleColor.White);
                 PrtStringOnPosition.PrintStringOnPosition(8, 6, "Acceleración: " + acceleration, ConsoleColor.White);
-                //Console.Beep();
+                // Efecto de velocidad usando un Thread
                 Thread.Sleep((int)(600 - speed));
             }
             }
